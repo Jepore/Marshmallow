@@ -10,11 +10,13 @@ public class PlayerControl : MonoBehaviour
 {
     //Variables:
     public float speed;
-    private Rigidbody rgidbodyRef;
+    public Rigidbody rigidbodyRef;
+    public GameObject mainCam;
+
 
     void Start()
     {
-
+        rigidbodyRef = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -25,22 +27,40 @@ public class PlayerControl : MonoBehaviour
 
     private void Movement()
     {
+        float temp = 0;
+        rigidbodyRef.velocity = new Vector3(0,0,0);
         //Movement
-        if (Input.GetKey(KeyCode.A) || Input.GetKey("left"))
+        if (Input.GetKey(KeyCode.A))
         {
-            transform.position += Vector3.left * speed * Time.deltaTime;
+            temp = -9 * Time.deltaTime * speed;
+            transform.Rotate(new Vector3(0, temp, 0), Space.World);
+            mainCam.GetComponent<CameraControl>().Rotating(temp);
+
         }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey("right"))
+        if (Input.GetKey(KeyCode.D))
         {
-            transform.position += Vector3.right * speed * Time.deltaTime;
+            transform.Rotate(new Vector3(0, 9, 0) * Time.deltaTime * speed, Space.World);
         }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+        if (Input.GetKey(KeyCode.W))
         {
-            transform.position += Vector3.forward * speed * Time.deltaTime;
+            rigidbodyRef.velocity = transform.forward * speed;
         }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey("down"))
+        if (Input.GetKey(KeyCode.S))
         {
-            transform.position -= Vector3.forward * speed * Time.deltaTime;
+            rigidbodyRef.velocity = -transform.forward * speed;
+
         }
     }
+
+    /*public class Example : MonoBehaviour
+    {
+        public float angleBetween = 0.0f;
+        public Transform target;
+
+        void Update()
+        {
+            Vector3 targetDir = target.position - transform.position;
+            angleBetween = Vector3.Angle(transform.forward, targetDir);
+        }
+    }*/
 }
