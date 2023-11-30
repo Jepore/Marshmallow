@@ -27,29 +27,41 @@ public class PlayerControl : MonoBehaviour
 
     private void Movement()
     {
+        //Variables
         float temp = 0;
         rigidbodyRef.velocity = new Vector3(0,0,0);
+        mainCam.GetComponent<CameraControl>().Moving(new Vector3(0, 0, 0), speed);
+        //Vector3 startPos = transform.position;
+        //Vector3 change;
+        //Vector3 result;
+
         //Movement
         if (Input.GetKey(KeyCode.A))
         {
-            temp = -9 * Time.deltaTime * speed;
-            transform.Rotate(new Vector3(0, temp, 0), Space.World);
-            mainCam.GetComponent<CameraControl>().Rotating(temp);
+            temp = 9 * Time.deltaTime * speed;
+            transform.Rotate(new Vector3(0, -temp, 0), Space.World);
+            mainCam.GetComponent<CameraControl>().Rotating(-temp);
 
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(new Vector3(0, 9, 0) * Time.deltaTime * speed, Space.World);
+            temp = 9 * Time.deltaTime * speed;
+            transform.Rotate(new Vector3(0, temp, 0), Space.World);
+            mainCam.GetComponent<CameraControl>().Rotating(temp);
+
         }
+
         if (Input.GetKey(KeyCode.W))
         {
             rigidbodyRef.velocity = transform.forward * speed;
+            mainCam.GetComponent<CameraControl>().Moving(transform.forward, speed);
         }
         if (Input.GetKey(KeyCode.S))
         {
             rigidbodyRef.velocity = -transform.forward * speed;
-
+            mainCam.GetComponent<CameraControl>().Moving(-transform.forward, speed);
         }
+
     }
 
     /*public class Example : MonoBehaviour
