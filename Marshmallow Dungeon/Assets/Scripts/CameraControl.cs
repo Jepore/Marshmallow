@@ -38,10 +38,11 @@ public class CameraControl : MonoBehaviour
     /// </summary>
     /// <param name="direction"> transform.forward or -transform.forward</param>
     /// <param name="speed"> how fast it moves, same as player </param>
-    public void Moving(Vector3 direction, float speed)
+    public void Moving(Vector3 change)
     {
-        Debug.Log("Moving");
-        rigidbodyCam.velocity = direction * speed;
+        Debug.Log(change);
+        transform.position += change;
+        //rigidbodyCam.velocity = direction * speed;
     }
 
     public void Rotating(float degree)

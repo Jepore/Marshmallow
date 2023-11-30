@@ -9,6 +9,10 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     //Variables:
+    public int coins = 0;
+    public int hp = 50;
+
+    //Important Variables
     public float speed;
     public Rigidbody rigidbodyRef;
     public GameObject mainCam;
@@ -28,14 +32,12 @@ public class PlayerControl : MonoBehaviour
     private void Movement()
     {
         //Variables
-        float temp = 0;
-        rigidbodyRef.velocity = new Vector3(0,0,0);
-        mainCam.GetComponent<CameraControl>().Moving(new Vector3(0, 0, 0), speed);
-        //Vector3 startPos = transform.position;
-        //Vector3 change;
-        //Vector3 result;
+        float temp = 9 * Time.deltaTime * speed;
+        rigidbodyRef.velocity = new Vector3(0, 0, 0);
+        Vector3 startPos = transform.position;
+        Vector3 change;
 
-        //Movement
+        //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
         {
             temp = 9 * Time.deltaTime * speed;
@@ -51,28 +53,32 @@ public class PlayerControl : MonoBehaviour
 
         }
 
+        //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
             rigidbodyRef.velocity = transform.forward * speed;
-            mainCam.GetComponent<CameraControl>().Moving(transform.forward, speed);
+            change = transform.position;
+            Debug.Log("startpos" + startPos + "change" + change);
+            mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
             rigidbodyRef.velocity = -transform.forward * speed;
-            mainCam.GetComponent<CameraControl>().Moving(-transform.forward, speed);
+            change = transform.position;
+            mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
+
+
 
     }
 
-    /*public class Example : MonoBehaviour
+    private void OnTriggerEnter(Collider other)
     {
-        public float angleBetween = 0.0f;
-        public Transform target;
-
-        void Update()
+        if (other.gameObject.tag == "Coin")
         {
-            Vector3 targetDir = target.position - transform.position;
-            angleBetween = Vector3.Angle(transform.forward, targetDir);
-        }
-    }*/
+            other.gameObject.SetActive(false);
+
+        }    
+    }
+
 }
