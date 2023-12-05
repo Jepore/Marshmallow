@@ -16,11 +16,13 @@ public class PlayerControl : MonoBehaviour
     public float speed;
     public Rigidbody rigidbodyRef;
     public GameObject mainCam;
-
+    private Vector3 startPos;
+    private Vector3 change;
 
     void Start()
     {
         rigidbodyRef = GetComponent<Rigidbody>();
+        Vector3 startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -33,9 +35,8 @@ public class PlayerControl : MonoBehaviour
     {
         //Variables
         float temp = 9 * Time.deltaTime * speed;
-        rigidbodyRef.velocity = new Vector3(0, 0, 0);
-        Vector3 startPos = transform.position;
-        Vector3 change;
+        //rigidbodyRef.velocity = new Vector3(0, 0, 0);
+        Vector3 change = transform.position;
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
@@ -57,17 +58,24 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             rigidbodyRef.velocity = transform.forward * speed;
-            change = transform.position;
-            Debug.Log("startpos" + startPos + "change" + change);
-            mainCam.GetComponent<CameraControl>().Moving(startPos - change);
+            //change = transform.position;
+            //Debug.Log("startpos" + startPos + "change" + change);
+            //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
             rigidbodyRef.velocity = -transform.forward * speed;
-            change = transform.position;
-            mainCam.GetComponent<CameraControl>().Moving(startPos - change);
+            //change = transform.position;
+            //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
 
+        //Adjusts Camera position when player moves forwards/backwards
+        if (startPos != change)
+        {
+            Vector3 cameraCorrect = change - startPos;
+            mainCam.GetComponent<CameraControl>().Moving(cameraCorrect);
+            startPos = change;
+        }
 
 
     }
