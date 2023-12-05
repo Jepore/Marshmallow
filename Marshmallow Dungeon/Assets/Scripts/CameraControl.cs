@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 // Liebert, Jasper
 // 11/30/2023
 // Manages camera movement and rotations
@@ -9,27 +10,28 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-
     public GameObject playerPos;
     public Vector3 offset;
     public Rigidbody rigidbodyCam;
 
     void Start()
     {
-        Offset(offset);
+        Offset();
         rigidbodyCam = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
+
     }
 
     /// <summary>
     /// Offset camera by a vector3, only to be used when rotation is 0,0,0
     /// </summary>
     /// <param name="offset"> the offset vector3 </param>
-    public void Offset(Vector3 offset)
+    public void Offset()
     {
+        transform.rotation = Quaternion.identity;
         transform.position = playerPos.transform.position + offset;
     }
 

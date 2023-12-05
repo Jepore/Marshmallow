@@ -11,16 +11,22 @@ public class PlayerControl : MonoBehaviour
     //Variables:
     public int coins = 0;
     public int hp = 50;
+    public bool isGrounded = true;
+    public float jumpForce = 10;
+    public float speed = 7;
+
 
     //Important Variables
-    public float speed;
     public Rigidbody rigidbodyRef;
-    public GameObject mainCam;
+    public CameraControl mainCam;
+    public Vector3 spawnPoint;
     private Vector3 startPos;
     private Vector3 change;
 
+
     void Start()
     {
+        spawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
         Vector3 startPos = transform.position;
     }
@@ -28,30 +34,57 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Dead();
         Movement();
     }
+
+    private void IsGrounded()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.3f))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
 
     private void Movement()
     {
         //Variables
         float temp = 9 * Time.deltaTime * speed;
-        //rigidbodyRef.velocity = new Vector3(0, 0, 0);
         Vector3 change = transform.position;
+
+
+        IsGrounded();
+        if (isGrounded)
+        {
+            rigidbodyRef.velocity = Vector3.zero;
+        }
+
+        //jumps when space is pressed
+        if (Input.GetKey(KeyCode.Space))
+        {
+            HandleJump();
+        }
+
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
         {
             temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-            mainCam.GetComponent<CameraControl>().Rotating(-temp);
+            mainCam.Rotating(-temp);
 
         }
         if (Input.GetKey(KeyCode.D))
         {
             temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, temp, 0), Space.World);
-            mainCam.GetComponent<CameraControl>().Rotating(temp);
-
+            mainCam.Rotating(temp);
         }
 
         //Adds velocity to both the player and the camera when moving
@@ -73,20 +106,59 @@ public class PlayerControl : MonoBehaviour
         if (startPos != change)
         {
             Vector3 cameraCorrect = change - startPos;
-            mainCam.GetComponent<CameraControl>().Moving(cameraCorrect);
+            mainCam.Moving(cameraCorrect);
             startPos = change;
         }
 
 
     }
 
+
+    /// <summary>
+    /// if player is on the ground, add upwards velocity
+    /// </summary>
+    private void HandleJump()
+    {
+        if (isGrounded)
+        {
+            rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    /// <summary>
+    /// Checks when player should die, and acts accordingly
+    /// </summary>
+    private void Dead()
+    {
+        if (transform.position.y <= -15)
+        {
+            mainCam.Offset();
+            transform.position = spawnPoint;
+        }
+    }
+
+    /// <summary>
+    /// manages collisions
+    /// </summary>
+    /// <param name="other"> trigger that player collided with </param>
     private void OnTriggerEnter(Collider other)
     {
+        //
         if (other.gameObject.tag == "Coin")
         {
+            coins++;
             other.gameObject.SetActive(false);
 
-        }    
+        }
+
+        //Sets new spawnpoint and teleports player
+        if (other.gameObject.tag == "Portal")
+        {
+            Portal tempPortal = other.gameObject.GetComponent<Portal>();
+            transform.position = tempPortal.tempPortalLocation.transform.position;
+            spawnPoint = transform.position;
+        }
     }
+
 
 }

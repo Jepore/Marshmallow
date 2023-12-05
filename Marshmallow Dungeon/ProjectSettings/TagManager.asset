@@ -8,6 +8,7 @@ TagManager:
   - Small Enemy
   - Spikes
   - Lava
+  - Fan Enemy
   layers:
   - Default
   - TransparentFX
