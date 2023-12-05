@@ -35,6 +35,15 @@ public class PlayerControl : MonoBehaviour
     void Update()
     {
         Dead();
+        //jumps when space is pressed
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            HandleJump();
+        }
+    }
+
+    private void FixedUpdate()
+    {
         Movement();
     }
 
@@ -65,11 +74,7 @@ public class PlayerControl : MonoBehaviour
             rigidbodyRef.velocity = Vector3.zero;
         }
 
-        //jumps when space is pressed
-        if (Input.GetKey(KeyCode.Space))
-        {
-            HandleJump();
-        }
+
 
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
@@ -90,14 +95,15 @@ public class PlayerControl : MonoBehaviour
         //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
-            rigidbodyRef.velocity = transform.forward * speed;
+            rigidbodyRef.velocity = new Vector3(transform.forward.x*speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
             //change = transform.position;
             //Debug.Log("startpos" + startPos + "change" + change);
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            rigidbodyRef.velocity = -transform.forward * speed;
+            rigidbodyRef.velocity = new Vector3(-transform.forward.x*speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
+            //rigidbodyRef.velocity = -transform.forward * speed;
             //change = transform.position;
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }

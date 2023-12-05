@@ -7,6 +7,7 @@ using TMPro;
 public class UIManger : MonoBehaviour
 {
     public PlayerControl playerControl;
+    public Image hpBar;
     public TMP_Text pointsText;
     public TMP_Text hpText;
 
@@ -26,5 +27,7 @@ public class UIManger : MonoBehaviour
     {
         pointsText.text = "Points: " + playerControl.coins;
         hpText.text = "Lives: " + playerControl.hp;
+        //hpBar.rectTransform.sizeDelta = new Vector2(width, height);
+
     }
 }

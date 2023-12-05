@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Coin
   - Fan Enemy
+  - Portal
+  - Small Enemy
   layers:
   - Default
   - TransparentFX
