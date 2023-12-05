@@ -40,7 +40,7 @@ public class CameraControl : MonoBehaviour
     /// <param name="speed"> how fast it moves, same as player </param>
     public void Moving(Vector3 change)
     {
-        Debug.Log(change);
+        //Debug.Log(change);
         transform.position += change;
         //rigidbodyCam.velocity = direction * speed;
     }
