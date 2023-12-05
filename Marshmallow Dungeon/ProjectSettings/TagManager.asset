@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Coin
+  - Small Enemy
+  - Spikes
+  - Lava
   - Fan Enemy
   - Portal
   - Small Enemy
