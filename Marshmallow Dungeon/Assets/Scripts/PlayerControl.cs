@@ -11,9 +11,12 @@ public class PlayerControl : MonoBehaviour
     //Variables:
     public int coins = 0;
     public int hp = 50;
+    public bool isGrounded = true;
+    public float jumpForce = 10;
+    public float speed = 7;
+
 
     //Important Variables
-    public float speed;
     public Rigidbody rigidbodyRef;
     public GameObject mainCam;
     private Vector3 startPos;
@@ -31,12 +34,39 @@ public class PlayerControl : MonoBehaviour
         Movement();
     }
 
+    private void IsGrounded()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.3f))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
+
     private void Movement()
     {
         //Variables
         float temp = 9 * Time.deltaTime * speed;
-        //rigidbodyRef.velocity = new Vector3(0, 0, 0);
         Vector3 change = transform.position;
+
+
+        IsGrounded();
+        if (isGrounded)
+        {
+            rigidbodyRef.velocity = Vector3.zero;
+        }
+
+        //jumps when space is pressed
+        if (Input.GetKey(KeyCode.Space))
+        {
+            HandleJump();
+        }
+
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
@@ -51,20 +81,19 @@ public class PlayerControl : MonoBehaviour
             temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, temp, 0), Space.World);
             mainCam.GetComponent<CameraControl>().Rotating(temp);
-
         }
 
         //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
-            rigidbodyRef.velocity = transform.forward * speed;
+            rigidbodyRef.velocity += transform.forward * speed;
             //change = transform.position;
             //Debug.Log("startpos" + startPos + "change" + change);
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            rigidbodyRef.velocity = -transform.forward * speed;
+            rigidbodyRef.velocity += -transform.forward * speed;
             //change = transform.position;
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
@@ -80,6 +109,23 @@ public class PlayerControl : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// if player is on the ground, add upwards velocity
+    /// </summary>
+    private void HandleJump()
+    {
+        if (isGrounded)
+        {
+            rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+
+    /// <summary>
+    /// manages collisions
+    /// </summary>
+    /// <param name="other"> trigger that player collided with </param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Coin")

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 // Liebert, Jasper
 // 11/30/2023
 // Manages camera movement and rotations
@@ -9,7 +10,6 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-
     public GameObject playerPos;
     public Vector3 offset;
     public Rigidbody rigidbodyCam;
@@ -22,6 +22,7 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
+
     }
 
     /// <summary>
