@@ -16,7 +16,7 @@ public class CameraControl : MonoBehaviour
 
     void Start()
     {
-        Offset(offset);
+        Offset();
         rigidbodyCam = GetComponent<Rigidbody>();
     }
 
@@ -29,8 +29,9 @@ public class CameraControl : MonoBehaviour
     /// Offset camera by a vector3, only to be used when rotation is 0,0,0
     /// </summary>
     /// <param name="offset"> the offset vector3 </param>
-    public void Offset(Vector3 offset)
+    public void Offset()
     {
+        transform.rotation = Quaternion.identity;
         transform.position = playerPos.transform.position + offset;
     }
 

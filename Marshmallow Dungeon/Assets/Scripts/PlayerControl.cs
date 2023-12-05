@@ -18,12 +18,15 @@ public class PlayerControl : MonoBehaviour
 
     //Important Variables
     public Rigidbody rigidbodyRef;
-    public GameObject mainCam;
+    public CameraControl mainCam;
+    public Vector3 spawnPoint;
     private Vector3 startPos;
     private Vector3 change;
 
+
     void Start()
     {
+        spawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
         Vector3 startPos = transform.position;
     }
@@ -31,6 +34,7 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Dead();
         Movement();
     }
 
@@ -73,27 +77,27 @@ public class PlayerControl : MonoBehaviour
         {
             temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-            mainCam.GetComponent<CameraControl>().Rotating(-temp);
+            mainCam.Rotating(-temp);
 
         }
         if (Input.GetKey(KeyCode.D))
         {
             temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, temp, 0), Space.World);
-            mainCam.GetComponent<CameraControl>().Rotating(temp);
+            mainCam.Rotating(temp);
         }
 
         //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
-            rigidbodyRef.velocity += transform.forward * speed;
+            rigidbodyRef.velocity = transform.forward * speed;
             //change = transform.position;
             //Debug.Log("startpos" + startPos + "change" + change);
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            rigidbodyRef.velocity += -transform.forward * speed;
+            rigidbodyRef.velocity = -transform.forward * speed;
             //change = transform.position;
             //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
@@ -102,7 +106,7 @@ public class PlayerControl : MonoBehaviour
         if (startPos != change)
         {
             Vector3 cameraCorrect = change - startPos;
-            mainCam.GetComponent<CameraControl>().Moving(cameraCorrect);
+            mainCam.Moving(cameraCorrect);
             startPos = change;
         }
 
@@ -121,6 +125,17 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks when player should die, and acts accordingly
+    /// </summary>
+    private void Dead()
+    {
+        if (transform.position.y <= -15)
+        {
+            mainCam.Offset();
+            transform.position = spawnPoint;
+        }
+    }
 
     /// <summary>
     /// manages collisions
@@ -128,11 +143,22 @@ public class PlayerControl : MonoBehaviour
     /// <param name="other"> trigger that player collided with </param>
     private void OnTriggerEnter(Collider other)
     {
+        //
         if (other.gameObject.tag == "Coin")
         {
+            coins++;
             other.gameObject.SetActive(false);
 
-        }    
+        }
+
+        //Sets new spawnpoint and teleports player
+        if (other.gameObject.tag == "Portal")
+        {
+            Portal tempPortal = other.gameObject.GetComponent<Portal>();
+            transform.position = tempPortal.tempPortalLocation.transform.position;
+            spawnPoint = transform.position;
+        }
     }
+
 
 }
