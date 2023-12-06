@@ -8,6 +8,8 @@ public class UIManger : MonoBehaviour
 {
     public PlayerControl playerControl;
     public Image hpBar;
+    private float hpWidth = 600;
+    private float hpHeight = 50;
     public TMP_Text pointsText;
     public TMP_Text hpText;
 
@@ -27,7 +29,9 @@ public class UIManger : MonoBehaviour
     {
         pointsText.text = "Points: " + playerControl.coins;
         hpText.text = "Lives: " + playerControl.hp;
-        //hpBar.rectTransform.sizeDelta = new Vector2(width, height);
+
+        hpWidth = 600 * (playerControl.hp / 50);
+        hpBar.rectTransform.sizeDelta = new Vector2(hpWidth, hpHeight);
 
     }
 }

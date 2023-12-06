@@ -9,11 +9,18 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     //Variables:
-    public int coins = 0;
-    public int hp = 50;
+    public float coins = 0;
+    public float hp = 50;
     public bool isGrounded = true;
     public float jumpForce = 10;
     public float speed = 7;
+    public float turnSpeed = 50;
+    //GetChild(i) items
+    //0 - empty
+    //1 - Sword
+    //2 - Gun
+    //3 - Shield
+    public int item = 0;
 
 
     //Important Variables
@@ -29,17 +36,19 @@ public class PlayerControl : MonoBehaviour
         spawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
         Vector3 startPos = transform.position;
+        ItemManager();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        Dead();
         //jumps when space is pressed
         if (Input.GetKeyDown(KeyCode.Space))
         {
             HandleJump();
         }
+        Dead();
     }
 
     private void FixedUpdate()
@@ -47,6 +56,9 @@ public class PlayerControl : MonoBehaviour
         Movement();
     }
 
+    /// <summary>
+    /// Checks if player is on the ground
+    /// </summary>
     private void IsGrounded()
     {
         RaycastHit hit;
@@ -61,35 +73,65 @@ public class PlayerControl : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// manages player movement, forwards/backwards/rotation/cameracontrol
+    /// </summary>
     private void Movement()
     {
         //Variables
-        float temp = 9 * Time.deltaTime * speed;
+        float temp = turnSpeed * Time.deltaTime;
         Vector3 change = transform.position;
 
-
+        //Checks if player is on the ground, stops x and z movement when grounded
         IsGrounded();
         if (isGrounded)
         {
-            rigidbodyRef.velocity = Vector3.zero;
+            rigidbodyRef.velocity = new Vector3(0, rigidbodyRef.velocity.y, 0);
         }
-
-
-
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
         {
-            temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, -temp, 0), Space.World);
             mainCam.Rotating(-temp);
 
+            /*if (Input.GetKey(KeyCode.W))
+            {
+                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
+                mainCam.Rotating(-temp);
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                transform.Rotate(new Vector3(0, temp, 0), Space.World);
+                mainCam.Rotating(temp);
+            }
+            else
+            {
+                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
+                mainCam.Rotating(-temp);
+            }*/
         }
         if (Input.GetKey(KeyCode.D))
         {
-            temp = 9 * Time.deltaTime * speed;
             transform.Rotate(new Vector3(0, temp, 0), Space.World);
             mainCam.Rotating(temp);
+
+            /*if (Input.GetKey(KeyCode.W))
+            {
+                transform.Rotate(new Vector3(0, temp, 0), Space.World);
+                mainCam.Rotating(temp);
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
+                mainCam.Rotating(-temp);
+            }
+            else
+            {
+                transform.Rotate(new Vector3(0, temp, 0), Space.World);
+                mainCam.Rotating(temp);
+            }*/
+
         }
 
         //Adds velocity to both the player and the camera when moving
@@ -131,6 +173,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Checks when player should die, and acts accordingly
     /// </summary>
@@ -143,18 +186,77 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    private void ItemManager()
+    {
+        //GetChild(i) items
+        //0 - empty
+        //1 - Sword
+        //2 - Gun
+        //3 - Shield
+
+        //empty
+        if (item == 0)
+        {
+            Debug.Log("Yuh");
+            //hides any visible items
+            for (int i = 0; i < 4; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+
+        //sword
+        if (item == 1)
+        {
+            //hides any visible items
+            for (int i = 0; i < 4; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
+
+        //gun
+        if (item == 2)
+        {
+            //hides any visible items
+            for (int i = 0; i < 4; i++)
+            {
+
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+
+            transform.GetChild(2).gameObject.SetActive(true);
+
+        }
+
+        //shield
+        if (item == 3)
+        {
+            //hides any visible items
+            for (int i = 0; i < 4; i++)
+            {
+
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+
+            transform.GetChild(3).gameObject.SetActive(true);
+
+        }
+    }
+
     /// <summary>
     /// manages collisions
     /// </summary>
     /// <param name="other"> trigger that player collided with </param>
     private void OnTriggerEnter(Collider other)
     {
-        //
+        //coins add points
         if (other.gameObject.tag == "Coin")
         {
             coins++;
             other.gameObject.SetActive(false);
-
         }
 
         //Sets new spawnpoint and teleports player
@@ -163,6 +265,30 @@ public class PlayerControl : MonoBehaviour
             Portal tempPortal = other.gameObject.GetComponent<Portal>();
             transform.position = tempPortal.tempPortalLocation.transform.position;
             spawnPoint = transform.position;
+        }
+
+        //sword pickup
+        if (other.gameObject.tag == "Sword Pickup")
+        {
+            other.gameObject.SetActive(false);
+            item = 1;
+            ItemManager();
+        }
+
+        //gun pickup
+        if (other.gameObject.tag == "Gun Pickup")
+        {
+            other.gameObject.SetActive(false);
+            item = 2;
+            ItemManager();
+        }
+
+        //shield pickup
+        if (other.gameObject.tag == "Shield Pickup")
+        {
+            other.gameObject.SetActive(false);
+            item = 3;
+            ItemManager();
         }
     }
 

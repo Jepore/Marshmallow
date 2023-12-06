@@ -11,6 +11,9 @@ TagManager:
   - Fan Enemy
   - Portal
   - Small Enemy
+  - Sword Pickup
+  - Gun Pickup
+  - Shield Pickup
   layers:
   - Default
   - TransparentFX
