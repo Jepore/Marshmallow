@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Liebert, Jasper
+//12/06/2023
+//Holds location for the portal to teleport to
+
 public class Portal : MonoBehaviour
 {
 

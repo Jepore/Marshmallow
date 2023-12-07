@@ -16,6 +16,7 @@ public class PlayerControl : MonoBehaviour
     public float speed = 7;
     public float turnSpeed = 50;
     public float rotation = 0;
+    public bool cooling = false;
     //GetChild(i) items
     //0 - empty
     //1 - Sword
@@ -23,11 +24,11 @@ public class PlayerControl : MonoBehaviour
     //3 - Shield
     public int item = 0;
 
-
     //Important Variables
     public Rigidbody rigidbodyRef;
     public CameraControl mainCam;
     public Vector3 spawnPoint;
+    public GameObject bullet;
     private Vector3 startPos;
     private Vector3 change;
 
@@ -49,9 +50,26 @@ public class PlayerControl : MonoBehaviour
         {
             HandleJump();
         }
+
+        //If player hits "C", swing sword and start a cooldown
+        if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 1)
+        {
+            StartCoroutine(Cooldown(2));
+            StartCoroutine("Swing");
+        }
+        //If player hits "C", shoot gun
+        if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 2)
+        {
+            StartCoroutine(Cooldown(0.5f));
+           
+            Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
+        }
+
+
         Dead();
     }
 
+    
     private void FixedUpdate()
     {
         Movement();
@@ -75,13 +93,12 @@ public class PlayerControl : MonoBehaviour
 
 
     /// <summary>
-    /// manages player movement, forwards/backwards/rotation/cameracontrol
+    /// manages player movement, forwards/backwards/rotation
     /// </summary>
     private void Movement()
     {
         //Variables
         float temp = turnSpeed * Time.deltaTime;
-        Vector3 change = transform.position;
 
         //Checks if player is on the ground, stops x and z movement when grounded
         IsGrounded();
@@ -110,15 +127,7 @@ public class PlayerControl : MonoBehaviour
             rigidbodyRef.velocity = new Vector3(-transform.forward.x*speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
         }
 
-        //Adjusts Camera position when player moves forwards/backwards
-        if (startPos != change)
-        {
-            Vector3 cameraCorrect = change - startPos;
-            //mainCam.Moving(cameraCorrect);
-            startPos = change;
-        }
-
-        mainCam.Rotating(rotation);
+        //Rotating only the y of the player and the camera (since it is childed)
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
 
 
@@ -143,6 +152,11 @@ public class PlayerControl : MonoBehaviour
     private void Dead()
     {
         if (transform.position.y <= -15)
+        {
+            mainCam.Offset();
+            transform.position = spawnPoint;
+        }
+        if (hp <= 0)
         {
             mainCam.Offset();
             transform.position = spawnPoint;
@@ -230,6 +244,12 @@ public class PlayerControl : MonoBehaviour
             spawnPoint = transform.position;
         }
 
+        if (other.gameObject.tag == "Fan Enemy")
+        {
+            hp -= 15;
+            rigidbodyRef.AddForce(Vector3.back * 50);
+        }
+
         //sword pickup
         if (other.gameObject.tag == "Sword Pickup")
         {
@@ -253,7 +273,28 @@ public class PlayerControl : MonoBehaviour
             item = 3;
             ItemManager();
         }
+
     }
 
+    /// <summary>
+    /// Swings Sword by setting the 2nd sword that is slightly further forwards to active
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Swing()
+    {
+        transform.GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(0).gameObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+        transform.GetChild(1).gameObject.SetActive(true);
+        transform.GetChild(0).gameObject.SetActive(false);
 
+        Debug.Log("swung");
+    }
+
+    IEnumerator Cooldown(float seconds)
+    {
+        cooling = true;
+        yield return new WaitForSeconds(seconds);
+        cooling = false;
+    }
 }

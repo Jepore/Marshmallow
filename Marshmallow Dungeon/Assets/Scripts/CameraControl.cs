@@ -6,18 +6,16 @@ using UnityEngine;
 // 11/30/2023
 // Manages camera movement and rotations
 
-
-
 public class CameraControl : MonoBehaviour
 {
+    //Variables
     public GameObject playerPos;
     public Vector3 offset;
-    public Rigidbody rigidbodyCam;
 
     void Start()
     {
+        //only called here, when player dies, and when player teleports
         Offset();
-        rigidbodyCam = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -35,19 +33,21 @@ public class CameraControl : MonoBehaviour
         transform.position = playerPos.transform.position + offset;
     }
 
-    /// <summary>
-    /// Add velocity to move the camera forwards with the player
-    /// </summary>
-    /// <param name="direction"> transform.forward or -transform.forward</param>
-    /// <param name="speed"> how fast it moves, same as player </param>
-    public void Moving(Vector3 change)
-    {
-        transform.position += change;
-    }
 
-    public void Rotating(float degree)
-    {
-        degree -= transform.eulerAngles.y;
-        transform.RotateAround(playerPos.transform.position, new Vector3(0, 1, 0), degree);
-    }
+    //A BUNCH OF BULLSH
+    ///// <summary>
+    ///// Add velocity to move the camera forwards with the player
+    ///// </summary>
+    ///// <param name="direction"> transform.forward or -transform.forward</param>
+    ///// <param name="speed"> how fast it moves, same as player </param>
+    //public void Moving(Vector3 change)
+    //{
+    //    transform.position += change;
+    //}
+
+    //public void Rotating(float degree)
+    //{
+    //    degree -= transform.eulerAngles.y;
+    //    transform.RotateAround(playerPos.transform.position, new Vector3(0, 1, 0), degree);
+    //}
 }

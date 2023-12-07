@@ -4,8 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+//Liebert, Jasper
+//12/06/2023
+//Updates Text and Health Bar at the top of the screen, also manages scene switching
+
 public class UIManger : MonoBehaviour
 {
+    //Variables
     public PlayerControl playerControl;
     public Image hpBar;
     private float hpWidth = 600;
@@ -25,6 +30,9 @@ public class UIManger : MonoBehaviour
         TextUpdate();
     }
 
+    /// <summary>
+    /// Updates Text and health bar size
+    /// </summary>
     private void TextUpdate()
     {
         pointsText.text = "Points: " + playerControl.coins;
@@ -32,6 +40,5 @@ public class UIManger : MonoBehaviour
 
         hpWidth = 600 * (playerControl.hp / 50);
         hpBar.rectTransform.sizeDelta = new Vector2(hpWidth, hpHeight);
-
     }
 }
