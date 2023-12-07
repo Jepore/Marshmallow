@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPos: {fileID: 3055721596017126620}
-  offset: {x: 0, y: 1, z: -4}
+  offset: {x: 0, y: 2, z: -4}
 --- !u!1 &2374446565942988083
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +570,7 @@ MonoBehaviour:
   rigidbodyRef: {fileID: 0}
   mainCam: {fileID: 2290060314923842772}
   spawnPoint: {x: 0, y: 0, z: 0}
-  bullet: {fileID: 0}
+  bullet: {fileID: 7250001550832086552, guid: afd99a0ee5d8a444ea08e2a4153c0011, type: 3}
 --- !u!54 &2921181265909839723
 Rigidbody:
   m_ObjectHideFlags: 0

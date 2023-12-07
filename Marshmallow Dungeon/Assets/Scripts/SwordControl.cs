@@ -28,9 +28,11 @@ public class SwordControl : MonoBehaviour
     /// <param name="other"> GameObject that was collided with </param>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag == "Small Enemy")
         {
             other.gameObject.SetActive(false);
         }
+
+
     }
 }

@@ -61,7 +61,6 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 2)
         {
             StartCoroutine(Cooldown(0.5f));
-           
             Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
         }
 
@@ -244,12 +243,6 @@ public class PlayerControl : MonoBehaviour
             spawnPoint = transform.position;
         }
 
-        if (other.gameObject.tag == "Fan Enemy")
-        {
-            hp -= 15;
-            rigidbodyRef.AddForce(Vector3.back * 50);
-        }
-
         //sword pickup
         if (other.gameObject.tag == "Sword Pickup")
         {
@@ -274,7 +267,25 @@ public class PlayerControl : MonoBehaviour
             ItemManager();
         }
 
+        //small enemy
+        if (other.gameObject.tag == "Small Enemy")
+        {
+            hp -= 15;
+            rigidbodyRef.AddForce(Vector3.back * 50);
+        }
+
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.tag == "Fan Enemy")
+        {
+            hp -= 15;
+            rigidbodyRef.AddForce(Vector3.back * 50);
+        }
+    }
+
 
     /// <summary>
     /// Swings Sword by setting the 2nd sword that is slightly further forwards to active
@@ -282,11 +293,16 @@ public class PlayerControl : MonoBehaviour
     /// <returns></returns>
     IEnumerator Swing()
     {
-        transform.GetChild(1).gameObject.SetActive(false);
-        transform.GetChild(0).gameObject.SetActive(true);
-        yield return new WaitForSeconds(1);
-        transform.GetChild(1).gameObject.SetActive(true);
-        transform.GetChild(0).gameObject.SetActive(false);
+
+            transform.GetChild(1).gameObject.SetActive(false);
+            transform.GetChild(0).gameObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+        if (item < 2)
+        {
+            transform.GetChild(1).gameObject.SetActive(true);
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
+
 
         Debug.Log("swung");
     }

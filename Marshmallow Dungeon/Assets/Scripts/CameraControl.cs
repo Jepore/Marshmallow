@@ -29,7 +29,7 @@ public class CameraControl : MonoBehaviour
     /// <param name="offset"> the offset vector3 </param>
     public void Offset()
     {
-        transform.rotation = Quaternion.identity;
+        transform.eulerAngles = new Vector3(Quaternion.identity.x + 30, Quaternion.identity.y, Quaternion.identity.z);
         transform.position = playerPos.transform.position + offset;
     }
 
