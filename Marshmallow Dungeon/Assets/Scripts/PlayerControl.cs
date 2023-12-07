@@ -15,6 +15,7 @@ public class PlayerControl : MonoBehaviour
     public float jumpForce = 10;
     public float speed = 7;
     public float turnSpeed = 50;
+    public float rotation = 0;
     //GetChild(i) items
     //0 - empty
     //1 - Sword
@@ -92,71 +93,33 @@ public class PlayerControl : MonoBehaviour
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-            mainCam.Rotating(-temp);
-
-            /*if (Input.GetKey(KeyCode.W))
-            {
-                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-                mainCam.Rotating(-temp);
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                transform.Rotate(new Vector3(0, temp, 0), Space.World);
-                mainCam.Rotating(temp);
-            }
-            else
-            {
-                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-                mainCam.Rotating(-temp);
-            }*/
+            rotation -= temp;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(new Vector3(0, temp, 0), Space.World);
-            mainCam.Rotating(temp);
-
-            /*if (Input.GetKey(KeyCode.W))
-            {
-                transform.Rotate(new Vector3(0, temp, 0), Space.World);
-                mainCam.Rotating(temp);
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                transform.Rotate(new Vector3(0, -temp, 0), Space.World);
-                mainCam.Rotating(-temp);
-            }
-            else
-            {
-                transform.Rotate(new Vector3(0, temp, 0), Space.World);
-                mainCam.Rotating(temp);
-            }*/
-
+            rotation += temp;
         }
 
         //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
             rigidbodyRef.velocity = new Vector3(transform.forward.x*speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
-            //change = transform.position;
-            //Debug.Log("startpos" + startPos + "change" + change);
-            //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
         if (Input.GetKey(KeyCode.S))
         {
             rigidbodyRef.velocity = new Vector3(-transform.forward.x*speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
-            //rigidbodyRef.velocity = -transform.forward * speed;
-            //change = transform.position;
-            //mainCam.GetComponent<CameraControl>().Moving(startPos - change);
         }
 
         //Adjusts Camera position when player moves forwards/backwards
         if (startPos != change)
         {
             Vector3 cameraCorrect = change - startPos;
-            mainCam.Moving(cameraCorrect);
+            //mainCam.Moving(cameraCorrect);
             startPos = change;
         }
+
+        mainCam.Rotating(rotation);
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
 
 
     }

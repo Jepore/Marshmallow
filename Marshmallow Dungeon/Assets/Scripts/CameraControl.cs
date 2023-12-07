@@ -42,13 +42,12 @@ public class CameraControl : MonoBehaviour
     /// <param name="speed"> how fast it moves, same as player </param>
     public void Moving(Vector3 change)
     {
-        //Debug.Log(change);
         transform.position += change;
-        //rigidbodyCam.velocity = direction * speed;
     }
 
     public void Rotating(float degree)
     {
+        degree -= transform.eulerAngles.y;
         transform.RotateAround(playerPos.transform.position, new Vector3(0, 1, 0), degree);
     }
 }
