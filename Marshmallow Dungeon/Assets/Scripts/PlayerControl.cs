@@ -117,6 +117,9 @@ public class PlayerControl : MonoBehaviour
         //2 - Gun
         //3 - Shield
 
+        //just in case :)
+        invulnerable = false;
+
         //empty
         if (item == 0)
         {
@@ -159,7 +162,8 @@ public class PlayerControl : MonoBehaviour
             //hides any visible items
             for (int i = 0; i < 4; i++)
             {
-
+                invulnerable = true;
+                //Needs to start a cooldown timer to set item to 0 with a bar that displays it -.-
                 transform.GetChild(i).gameObject.SetActive(false);
             }
 
@@ -175,7 +179,7 @@ public class PlayerControl : MonoBehaviour
     {
         //Variables
         float turning = turnSpeed * Time.deltaTime;
-        float speedCap = 22f;
+        float speedCap = 28f;
 
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
@@ -207,12 +211,15 @@ public class PlayerControl : MonoBehaviour
         {
             temp = -speedCap;
         }
-        else if (temp < 0.6f && temp > 0.6f)
+        else if (temp < 1f && temp > -1f)
         {
             temp = 0;
         }
-        temp = temp / 2;
-
+        temp = temp / 1.44f;
+        if (!isGrounded)
+        {
+            temp = temp / 1.44f;
+        }
 
         rotation += temp;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
