@@ -14,6 +14,7 @@ TagManager:
   - Sword Pickup
   - Gun Pickup
   - Shield Pickup
+  - Shop
   layers:
   - Default
   - TransparentFX

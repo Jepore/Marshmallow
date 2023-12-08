@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
+    public float temp = 0;
     //Variables:
     public float coins = 0;
     public float hp = 50;
@@ -21,6 +22,7 @@ public class PlayerControl : MonoBehaviour
     public float lives = 3;
     public bool shopping = false;
     public bool shoppable = true; //so you don't get locked in an infinite shop loop
+    public bool swinging;
     //GetChild(i) items
     //0 - empty
     //1 - Sword
@@ -40,6 +42,7 @@ public class PlayerControl : MonoBehaviour
 
     void Start()
     {
+        transform.GetChild(6).gameObject.SetActive(false);
         spawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
         Vector3 startPos = transform.position;
@@ -171,16 +174,18 @@ public class PlayerControl : MonoBehaviour
     private void Movement()
     {
         //Variables
-        float temp = turnSpeed * Time.deltaTime;
+        float turning = turnSpeed * Time.deltaTime;
+        float speedCap = 22f;
+
 
         //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
         if (Input.GetKey(KeyCode.A))
         {
-            rotation -= temp;
+            temp -= turning;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            rotation += temp;
+            temp += turning;
         }
 
         //Adds velocity to both the player and the camera when moving
@@ -194,6 +199,22 @@ public class PlayerControl : MonoBehaviour
         }
 
         //Rotating only the y of the player and the camera (since it is childed)
+        if (temp >= speedCap)
+        {
+            temp = speedCap;
+        }
+        else if (temp < -speedCap)
+        {
+            temp = -speedCap;
+        }
+        else if (temp < 0.6f && temp > 0.6f)
+        {
+            temp = 0;
+        }
+        temp = temp / 2;
+
+
+        rotation += temp;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
 
 
@@ -232,6 +253,13 @@ public class PlayerControl : MonoBehaviour
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation, transform.eulerAngles.z);
         rotation = 0;
         hp = 50;
+    }
+
+    private void Damaged(int hpLost)
+    {
+        hp -= hpLost;
+        StartCoroutine(Invulnerable(0.1f));
+        StartCoroutine("Blink");
     }
 
     /// <summary>
@@ -282,8 +310,7 @@ public class PlayerControl : MonoBehaviour
         //small enemy
         if (other.gameObject.tag == "Small Enemy" && !invulnerable)
         {
-            hp -= 15;
-            StartCoroutine(Invulnerable(0.1f));
+            Damaged(15);
         }
 
         //Shopping zone
@@ -299,8 +326,7 @@ public class PlayerControl : MonoBehaviour
 
         if (collision.gameObject.tag == "Fan Enemy" && !invulnerable)
         {
-            hp -= 15;
-            StartCoroutine(Invulnerable(0.1f));
+            Damaged(15);
             collision.gameObject.SetActive(false);
         }
     }
@@ -353,4 +379,12 @@ public class PlayerControl : MonoBehaviour
         shoppable = true;
     }
 
+    IEnumerator Blink()
+    {
+        transform.GetChild(5).gameObject.SetActive(false);
+        transform.GetChild(6).gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.7f);
+        transform.GetChild(6).gameObject.SetActive(false);
+        transform.GetChild(5).gameObject.SetActive(true);
+    }
 }
