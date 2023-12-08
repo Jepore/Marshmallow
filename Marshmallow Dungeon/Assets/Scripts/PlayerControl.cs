@@ -65,7 +65,7 @@ public class PlayerControl : MonoBehaviour
         //If player hits "C", shoot gun
         if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 2)
         {
-            StartCoroutine(Cooldown(0.5f));
+            StartCoroutine(Cooldown(0.3f));
             Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
         }
 
@@ -103,14 +103,7 @@ public class PlayerControl : MonoBehaviour
         {
             rigidbodyRef.velocity = new Vector3(0, rigidbodyRef.velocity.y, 0);
         }
-        else
-        {
-            while(!isGrounded)
-            {
-                speed = speed / 2;
-            }
-            speed = speed * 2;
-        }
+
     }
 
     public void ItemManager()
@@ -359,4 +352,5 @@ public class PlayerControl : MonoBehaviour
         yield return new WaitForSeconds(1);
         shoppable = true;
     }
+
 }
