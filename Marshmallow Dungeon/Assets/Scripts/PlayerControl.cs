@@ -23,6 +23,8 @@ public class PlayerControl : MonoBehaviour
     public bool shopping = false;
     public bool shoppable = true; //so you don't get locked in an infinite shop loop
     public bool swinging;
+    public bool damaged; //for stopping the invulnerable player model from appearing when you get hit
+    public bool dangerous;
     //GetChild(i) items
     //0 - empty
     //1 - Sword
@@ -35,6 +37,7 @@ public class PlayerControl : MonoBehaviour
     public CameraControl mainCam;
     public Vector3 spawnPoint;
     public GameObject bullet;
+    public UIManger uiManager;
     public ShopControl shopControl;
     private Vector3 startPos;
     private Vector3 change;
@@ -53,6 +56,7 @@ public class PlayerControl : MonoBehaviour
     void Update()
     {
         IsGrounded();
+
         //jumps when space is pressed
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -72,7 +76,8 @@ public class PlayerControl : MonoBehaviour
             Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
         }
 
-
+        //checks if player is invulnerable
+        Armored();
 
         Dead();
     }
@@ -109,6 +114,9 @@ public class PlayerControl : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Switches item being held to int "item" value and starts the coroutine that will disable them
+    /// </summary>
     public void ItemManager()
     {
         //GetChild(i) items
@@ -119,56 +127,39 @@ public class PlayerControl : MonoBehaviour
 
         //just in case :)
         invulnerable = false;
+        dangerous = false;
 
-        //empty
-        if (item == 0)
+        //hides any visible items
+        for (int i = 0; i < 4; i++)
         {
-            //hides any visible items
-            for (int i = 0; i < 4; i++)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
+            transform.GetChild(i).gameObject.SetActive(false);
         }
 
         //sword
         if (item == 1)
         {
-            //hides any visible items
-            for (int i = 0; i < 4; i++)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-
-            transform.GetChild(1).gameObject.SetActive(true);
+            uiManager.itemTemp = 30;
+            uiManager.itemTimer = 30;
+            StartCoroutine(ItemPickup(1, 30));
         }
 
         //gun
         if (item == 2)
         {
-            //hides any visible items
-            for (int i = 0; i < 4; i++)
-            {
-
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-
-            transform.GetChild(2).gameObject.SetActive(true);
-
+            uiManager.itemTemp = 20;
+            uiManager.itemTimer = 20;
+            StartCoroutine(ItemPickup(2, 20));
         }
+
 
         //shield
         if (item == 3)
         {
-            //hides any visible items
-            for (int i = 0; i < 4; i++)
-            {
-                invulnerable = true;
-                //Needs to start a cooldown timer to set item to 0 with a bar that displays it -.-
-                transform.GetChild(i).gameObject.SetActive(false);
-            }
-
-            transform.GetChild(3).gameObject.SetActive(true);
-
+            invulnerable = true;
+            dangerous = true;
+            uiManager.itemTemp = 20;
+            uiManager.itemTimer = 20;
+            StartCoroutine(ItemPickup(3, 20));
         }
     }
 
@@ -254,6 +245,9 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Respawns player, resets position, rotation and health
+    /// </summary>
     private void Respawn()
     {
         transform.position = spawnPoint;
@@ -262,11 +256,32 @@ public class PlayerControl : MonoBehaviour
         hp = 50;
     }
 
+    /// <summary>
+    /// damages player and blinks their character model red
+    /// </summary>
+    /// <param name="hpLost"> how much hp is lost </param>
     private void Damaged(int hpLost)
     {
+        damaged = true;
         hp -= hpLost;
         StartCoroutine(Invulnerable(0.1f));
         StartCoroutine("Blink");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Armored()
+    {
+        if (invulnerable && !damaged)
+        {
+            transform.GetChild(7).gameObject.SetActive(true);
+        }
+        else
+        {
+            transform.GetChild(7).gameObject.SetActive(false);
+
+        }
     }
 
     /// <summary>
@@ -315,9 +330,25 @@ public class PlayerControl : MonoBehaviour
         }
 
         //small enemy
-        if (other.gameObject.tag == "Small Enemy" && !invulnerable)
+        if (other.gameObject.tag == "Small Enemy")
         {
-            Damaged(15);
+            if (!dangerous)
+            {
+                if (!invulnerable)
+                {
+                    Damaged(15);
+                }
+            }
+            else
+            {
+                other.gameObject.SetActive(false);
+            }
+        }
+
+        //small enemy
+        if (other.gameObject.tag == "Spikes" && !invulnerable)
+        {
+            Damaged(10);
         }
 
         //Shopping zone
@@ -333,8 +364,18 @@ public class PlayerControl : MonoBehaviour
 
         if (collision.gameObject.tag == "Fan Enemy" && !invulnerable)
         {
-            Damaged(15);
-            collision.gameObject.SetActive(false);
+            if (!dangerous)
+            {
+                if (!invulnerable)
+                {
+                    Damaged(15);
+                    collision.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                collision.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -347,16 +388,17 @@ public class PlayerControl : MonoBehaviour
     {
         transform.GetChild(1).gameObject.SetActive(false);
         transform.GetChild(0).gameObject.SetActive(true);
+        dangerous = true;
         invulnerable = true;
             yield return new WaitForSeconds(1);
         invulnerable = false;
-        if (item < 2)
+        if (item < 2 && item != 0)
         {
             transform.GetChild(1).gameObject.SetActive(true);
             transform.GetChild(0).gameObject.SetActive(false);
         }
 
-
+        dangerous = false;
         Debug.Log("swung");
     }
 
@@ -393,5 +435,26 @@ public class PlayerControl : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         transform.GetChild(6).gameObject.SetActive(false);
         transform.GetChild(5).gameObject.SetActive(true);
+        damaged = false;
+    }
+
+    /// <summary>
+    /// sets item active, disables it after time and sets item back to 0
+    /// </summary>
+    /// <param name="item"> index of the item you are equipping</param>
+    /// <param name="time"> seconds </param>
+    /// <returns></returns>
+    IEnumerator ItemPickup(int itemPicked, float time)
+    {
+        
+        transform.GetChild(itemPicked).gameObject.SetActive(true);
+        yield return new WaitForSeconds(time);
+        if (item == itemPicked)
+        {
+            item = 0;
+            ItemManager();
+        }
+
+        Debug.Log("Checking");
     }
 }
