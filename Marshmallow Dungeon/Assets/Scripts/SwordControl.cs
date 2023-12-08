@@ -32,7 +32,18 @@ public class SwordControl : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
+    }
 
+    /// <summary>
+    /// Manages Collisions with sword
+    /// </summary>
+    /// <param name="collision"> mostly fans</param>
+    private void OnCollisionEnter(Collision collision)
+    {
 
+        if (collision.gameObject.tag == "Fan Enemy")
+        {
+            collision.gameObject.SetActive(false);
+        }
     }
 }

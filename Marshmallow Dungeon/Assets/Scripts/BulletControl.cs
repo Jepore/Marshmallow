@@ -35,4 +35,24 @@ public class BulletControl : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
+
+    /// <summary>
+    /// Manages collisions with the sword item
+    /// </summary>
+    /// <param name="other"> GameObject that was collided with </param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Small Enemy")
+        {
+            other.gameObject.SetActive(false);
+        }
+
+        if (other.tag == "Fan Enemy")
+        {
+            other.gameObject.SetActive(false);
+        }
+
+
+    }
+
 }

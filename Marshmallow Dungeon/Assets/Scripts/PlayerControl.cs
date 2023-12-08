@@ -29,8 +29,10 @@ public class PlayerControl : MonoBehaviour
     public CameraControl mainCam;
     public Vector3 spawnPoint;
     public GameObject bullet;
+    public ShopControl shopControl;
     private Vector3 startPos;
     private Vector3 change;
+    public bool shopping = false;
 
 
     void Start()
@@ -71,7 +73,10 @@ public class PlayerControl : MonoBehaviour
     
     private void FixedUpdate()
     {
-        Movement();
+        if (!shopping)
+        {
+            Movement();
+        }
     }
 
     /// <summary>
@@ -274,6 +279,12 @@ public class PlayerControl : MonoBehaviour
             rigidbodyRef.AddForce(Vector3.back * 50);
         }
 
+        //Shopping zone
+        if (other.gameObject.tag == "Shop")
+        {
+            shopping = true;
+            shopControl.Activate();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -282,7 +293,6 @@ public class PlayerControl : MonoBehaviour
         if (collision.gameObject.tag == "Fan Enemy")
         {
             hp -= 15;
-            rigidbodyRef.AddForce(Vector3.back * 50);
         }
     }
 
