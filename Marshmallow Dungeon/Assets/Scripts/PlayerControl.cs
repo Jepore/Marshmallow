@@ -14,9 +14,13 @@ public class PlayerControl : MonoBehaviour
     public bool isGrounded = true;
     public float jumpForce = 10;
     public float speed = 7;
-    public float turnSpeed = 50;
+    public float turnSpeed = 110;
     public float rotation = 0;
-    public bool cooling = false;
+    public bool cooling = false; //for cooldowns
+    public bool invulnerable = false;
+    public float lives = 3;
+    public bool shopping = false;
+    public bool shoppable = true; //so you don't get locked in an infinite shop loop
     //GetChild(i) items
     //0 - empty
     //1 - Sword
@@ -32,7 +36,6 @@ public class PlayerControl : MonoBehaviour
     public ShopControl shopControl;
     private Vector3 startPos;
     private Vector3 change;
-    public bool shopping = false;
 
 
     void Start()
@@ -41,12 +44,12 @@ public class PlayerControl : MonoBehaviour
         rigidbodyRef = GetComponent<Rigidbody>();
         Vector3 startPos = transform.position;
         ItemManager();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        IsGrounded();
         //jumps when space is pressed
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -56,7 +59,7 @@ public class PlayerControl : MonoBehaviour
         //If player hits "C", swing sword and start a cooldown
         if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 1)
         {
-            StartCoroutine(Cooldown(2));
+            StartCoroutine(Cooldown(1.5f));
             StartCoroutine("Swing");
         }
         //If player hits "C", shoot gun
@@ -65,6 +68,7 @@ public class PlayerControl : MonoBehaviour
             StartCoroutine(Cooldown(0.5f));
             Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
         }
+
 
 
         Dead();
@@ -93,81 +97,23 @@ public class PlayerControl : MonoBehaviour
         {
             isGrounded = false;
         }
-    }
-
-
-    /// <summary>
-    /// manages player movement, forwards/backwards/rotation
-    /// </summary>
-    private void Movement()
-    {
-        //Variables
-        float temp = turnSpeed * Time.deltaTime;
 
         //Checks if player is on the ground, stops x and z movement when grounded
-        IsGrounded();
         if (isGrounded)
         {
             rigidbodyRef.velocity = new Vector3(0, rigidbodyRef.velocity.y, 0);
         }
-
-        //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
-        if (Input.GetKey(KeyCode.A))
+        else
         {
-            rotation -= temp;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            rotation += temp;
-        }
-
-        //Adds velocity to both the player and the camera when moving
-        if (Input.GetKey(KeyCode.W))
-        {
-            rigidbodyRef.velocity = new Vector3(transform.forward.x*speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            rigidbodyRef.velocity = new Vector3(-transform.forward.x*speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
-        }
-
-        //Rotating only the y of the player and the camera (since it is childed)
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
-
-
-    }
-
-
-    /// <summary>
-    /// if player is on the ground, add upwards velocity
-    /// </summary>
-    private void HandleJump()
-    {
-        if (isGrounded)
-        {
-            rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            while(!isGrounded)
+            {
+                speed = speed / 2;
+            }
+            speed = speed * 2;
         }
     }
 
-
-    /// <summary>
-    /// Checks when player should die, and acts accordingly
-    /// </summary>
-    private void Dead()
-    {
-        if (transform.position.y <= -15)
-        {
-            mainCam.Offset();
-            transform.position = spawnPoint;
-        }
-        if (hp <= 0)
-        {
-            mainCam.Offset();
-            transform.position = spawnPoint;
-        }
-    }
-
-    private void ItemManager()
+    public void ItemManager()
     {
         //GetChild(i) items
         //0 - empty
@@ -178,7 +124,6 @@ public class PlayerControl : MonoBehaviour
         //empty
         if (item == 0)
         {
-            Debug.Log("Yuh");
             //hides any visible items
             for (int i = 0; i < 4; i++)
             {
@@ -228,6 +173,75 @@ public class PlayerControl : MonoBehaviour
     }
 
     /// <summary>
+    /// manages player movement, forwards/backwards/rotation
+    /// </summary>
+    private void Movement()
+    {
+        //Variables
+        float temp = turnSpeed * Time.deltaTime;
+
+        //Rotations for both the player and the camera when pressing A or D (Need to add Time.deltaTime?)
+        if (Input.GetKey(KeyCode.A))
+        {
+            rotation -= temp;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            rotation += temp;
+        }
+
+        //Adds velocity to both the player and the camera when moving
+        if (Input.GetKey(KeyCode.W))
+        {
+            rigidbodyRef.velocity = new Vector3(transform.forward.x * speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            rigidbodyRef.velocity = new Vector3(-transform.forward.x * speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
+        }
+
+        //Rotating only the y of the player and the camera (since it is childed)
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
+
+
+    }
+
+    /// <summary>
+    /// if player is on the ground, add upwards velocity
+    /// </summary>
+    private void HandleJump()
+    {
+        if (isGrounded)
+        {
+            rigidbodyRef.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+
+    /// <summary>
+    /// Checks when player should die, and acts accordingly
+    /// </summary>
+    private void Dead()
+    {
+        if (transform.position.y <= -15)
+        {
+            Respawn();
+        }
+        if (hp <= 0)
+        {
+            Respawn();
+        }
+    }
+
+    private void Respawn()
+    {
+        transform.position = spawnPoint;
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation, transform.eulerAngles.z);
+        rotation = 0;
+        hp = 50;
+    }
+
+    /// <summary>
     /// manages collisions
     /// </summary>
     /// <param name="other"> trigger that player collided with </param>
@@ -273,14 +287,14 @@ public class PlayerControl : MonoBehaviour
         }
 
         //small enemy
-        if (other.gameObject.tag == "Small Enemy")
+        if (other.gameObject.tag == "Small Enemy" && !invulnerable)
         {
             hp -= 15;
-            rigidbodyRef.AddForce(Vector3.back * 50);
+            StartCoroutine(Invulnerable(0.1f));
         }
 
         //Shopping zone
-        if (other.gameObject.tag == "Shop")
+        if (other.gameObject.tag == "Shop" && shoppable)
         {
             shopping = true;
             shopControl.Activate();
@@ -290,9 +304,11 @@ public class PlayerControl : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.tag == "Fan Enemy")
+        if (collision.gameObject.tag == "Fan Enemy" && !invulnerable)
         {
             hp -= 15;
+            StartCoroutine(Invulnerable(0.1f));
+            collision.gameObject.SetActive(false);
         }
     }
 
@@ -303,10 +319,11 @@ public class PlayerControl : MonoBehaviour
     /// <returns></returns>
     IEnumerator Swing()
     {
-
-            transform.GetChild(1).gameObject.SetActive(false);
-            transform.GetChild(0).gameObject.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(0).gameObject.SetActive(true);
+        invulnerable = true;
             yield return new WaitForSeconds(1);
+        invulnerable = false;
         if (item < 2)
         {
             transform.GetChild(1).gameObject.SetActive(true);
@@ -322,5 +339,24 @@ public class PlayerControl : MonoBehaviour
         cooling = true;
         yield return new WaitForSeconds(seconds);
         cooling = false;
+    }
+
+    IEnumerator Invulnerable(float seconds)
+    {
+        invulnerable = true;
+        yield return new WaitForSeconds(seconds);
+        invulnerable = false;
+    }
+
+    public void ShopCooldown()
+    {
+        StartCoroutine("LeaveShop");
+    }
+
+    IEnumerator LeaveShop()
+    {
+        shoppable = false;
+        yield return new WaitForSeconds(1);
+        shoppable = true;
     }
 }

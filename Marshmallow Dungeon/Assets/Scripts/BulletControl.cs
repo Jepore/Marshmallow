@@ -29,6 +29,11 @@ public class BulletControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Fan Enemy")
+        {
+            collision.gameObject.SetActive(false);
+        }
+
         //So the bullet doesn't collide with the player accidentally
         if (collision.gameObject.tag != "Player")
         {

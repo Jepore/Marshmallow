@@ -40,10 +40,13 @@ public class SwordControl : MonoBehaviour
     /// <param name="collision"> mostly fans</param>
     private void OnCollisionEnter(Collision collision)
     {
-
+        Debug.Log(collision);
         if (collision.gameObject.tag == "Fan Enemy")
         {
+            Debug.Log("WAH");
             collision.gameObject.SetActive(false);
         }
     }
+
+
 }

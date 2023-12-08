@@ -35,9 +35,9 @@ public class UIManger : MonoBehaviour
     /// </summary>
     private void TextUpdate()
     {
-        pointsText.text = "Points: " + playerControl.coins;
+        pointsText.text = "Marshmallows: " + playerControl.coins;
         hpText.text = "Lives: " + playerControl.hp;
-
+        //adjusts health bar width with player hp
         hpWidth = 600 * (playerControl.hp / 50);
         hpBar.rectTransform.sizeDelta = new Vector2(hpWidth, hpHeight);
     }

@@ -25,18 +25,19 @@ public class ShopControl : MonoBehaviour
 
     public void Activate()
     {
-        playerControl.shopping = true;
         this.gameObject.SetActive(true);
     }
 
     public void Buy(int item)
     {
         playerControl.item = item;
+        playerControl.ItemManager();
     }
 
     public void Quit()
     {
         playerControl.shopping = false;
+        playerControl.ShopCooldown();
         this.gameObject.SetActive(false);
     }
 
