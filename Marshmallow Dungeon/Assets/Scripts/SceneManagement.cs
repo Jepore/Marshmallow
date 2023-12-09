@@ -10,7 +10,7 @@ using TMPro;
 
 public class SceneManagement : MonoBehaviour
 {
-
+    //variables
     public TMP_Text timerText;
     public TMP_Text marshText;
     public TMP_Text score;
@@ -18,6 +18,7 @@ public class SceneManagement : MonoBehaviour
     //called once per frame
     void Start()
     {
+        //calculates score and displays the calculations
         timerText.text = "  " + (int)(UIManger.time*100)/100 + " Seconds";
         marshText.text = "  " + PlayerControl.coins + " Marshmallows";
         score.text = "Score : " + ((int)(UIManger.time * 100) / 100 - PlayerControl.coins);

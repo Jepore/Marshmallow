@@ -73,6 +73,7 @@ public class UIManger : MonoBehaviour
             itemTemp = 0;
         }
 
+        //adjusts item bar size
         itemWidth = 600 * (itemTemp / itemTimer);
         itemBar.rectTransform.sizeDelta = new Vector2(itemWidth, itemHeight);
 

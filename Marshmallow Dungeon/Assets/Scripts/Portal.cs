@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
-
+    //Variable
     public GameObject tempPortalLocation;
     // Start is called before the first frame update
     void Start()

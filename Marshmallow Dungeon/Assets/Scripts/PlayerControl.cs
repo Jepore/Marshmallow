@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 //Liebert, Jasper
 //11/28/2023
-//This script will manage player movement and collisions
+//This script will manage player movement, attacks, collisions, triggers, damage, deaths, items, and sometimes scene switching
 
 public class PlayerControl : MonoBehaviour
 {
@@ -78,7 +78,9 @@ public class PlayerControl : MonoBehaviour
         Dead();
     }
 
-    
+    /// <summary>
+    /// Updates Movement with FixedUpdate rather than Update
+    /// </summary>
     private void FixedUpdate()
     {
         if (!shopping)
@@ -247,7 +249,9 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// if player presses F, use item
+    /// </summary>
     private void Attacking()
     {
         //If player hits "C", swing sword and start a cooldown
@@ -305,7 +309,7 @@ public class PlayerControl : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// changes player material to metal so you can see that you're armored
     /// </summary>
     private void Armored()
     {
@@ -389,6 +393,7 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
+        //spawner
         if (other.gameObject.tag == "Spawner")
         {
             if (!dangerous)
@@ -426,6 +431,10 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Manages Collisions
+    /// </summary>
+    /// <param name="collision">mostly fans</param>
     private void OnCollisionEnter(Collision collision)
     {
 
@@ -469,6 +478,11 @@ public class PlayerControl : MonoBehaviour
         Debug.Log("swung");
     }
 
+    /// <summary>
+    /// Cooldown for attacks and items
+    /// </summary>
+    /// <param name="seconds"> how long </param>
+    /// <returns></returns>
     IEnumerator Cooldown(float seconds)
     {
         cooling = true;
@@ -476,6 +490,11 @@ public class PlayerControl : MonoBehaviour
         cooling = false;
     }
 
+    /// <summary>
+    /// makes player invulnerable for a specific amount of time
+    /// </summary>
+    /// <param name="seconds"> the specific amount of time </param>
+    /// <returns></returns>
     IEnumerator Invulnerable(float seconds)
     {
         invulnerable = true;
@@ -483,11 +502,18 @@ public class PlayerControl : MonoBehaviour
         invulnerable = false;
     }
 
+    /// <summary>
+    /// stops player from getting into an infinite shopping loop
+    /// </summary>
     public void ShopCooldown()
     {
         StartCoroutine("LeaveShop");
     }
 
+    /// <summary>
+    /// used in "ShopCooldown()"
+    /// </summary>
+    /// <returns></returns>
     IEnumerator LeaveShop()
     {
         shoppable = false;
@@ -495,6 +521,10 @@ public class PlayerControl : MonoBehaviour
         shoppable = true;
     }
 
+    /// <summary>
+    /// blinks player red when they take damage
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Blink()
     {
         transform.GetChild(5).gameObject.SetActive(false);

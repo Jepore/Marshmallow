@@ -29,6 +29,7 @@ public class BulletControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        //fan
         if (collision.gameObject.tag == "Fan Enemy")
         {
             collision.gameObject.SetActive(false);
@@ -58,8 +59,6 @@ public class BulletControl : MonoBehaviour
             other.GetComponent<Spawner_Script>().CancelInvoke();
             other.gameObject.SetActive(false);
         }
-
-
     }
 
 }

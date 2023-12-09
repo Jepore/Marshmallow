@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 12/05/2023
-//this script shows how the enemy will move back and forth.
+//this script shows how the enemy will move up and down.
 
 public class UpAndDown : MonoBehaviour
 {

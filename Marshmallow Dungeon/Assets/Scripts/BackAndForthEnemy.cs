@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class BackAndForth : MonoBehaviour
 {
+    //Variables
     public GameObject leftPoint;
     public GameObject rightPoint;
     private Vector3 leftPos;
@@ -19,6 +20,7 @@ public class BackAndForth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //initialize
         leftPos = leftPoint.transform.position;
         rightPos = rightPoint.transform.position;
     }

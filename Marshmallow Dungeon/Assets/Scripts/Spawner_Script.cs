@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Spawner_Script : MonoBehaviour
 {
+    //Variables
     public bool goingLeft;
 
     public GameObject projectilePrefab;
@@ -21,7 +22,9 @@ public class Spawner_Script : MonoBehaviour
         InvokeRepeating("SpawnProjectile", startDelay, timeBetweenShots);
     }
 
-
+    /// <summary>
+    /// Spawns Lazer projectile
+    /// </summary>
     public void SpawnProjectile()
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);

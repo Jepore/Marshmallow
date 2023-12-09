@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ShopControl : MonoBehaviour
 {
 
+    //variables
     public PlayerControl playerControl;
 
     
@@ -23,11 +24,18 @@ public class ShopControl : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Activates Shop
+    /// </summary>
     public void Activate()
     {
         this.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// changes player item and takes coins
+    /// </summary>
+    /// <param name="item"> item index </param>
     public void Buy(int item)
     {
         float itemCost = 0;
@@ -58,6 +66,9 @@ public class ShopControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// quit shop
+    /// </summary>
     public void Quit()
     {
         playerControl.shopping = false;

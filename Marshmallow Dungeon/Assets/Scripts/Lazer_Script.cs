@@ -4,6 +4,7 @@ using UnityEngine;
 
 //12/08/2023
 //This script breakdowns the lazer being pointed from the enemy
+
 public class Lazer_Script : MonoBehaviour
 {
     public float speed;
@@ -13,12 +14,14 @@ public class Lazer_Script : MonoBehaviour
 
     void Start()
     {
+        //initialize
         startPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //makes lazer move
         if(goingLeft == true)
         {
             transform.position += speed * Vector3.left * Time.deltaTime;
@@ -39,6 +42,10 @@ public class Lazer_Script : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// when lazer collides, set lazer inactive
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         this.gameObject.SetActive(false);
