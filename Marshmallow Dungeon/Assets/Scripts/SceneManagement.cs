@@ -8,7 +8,7 @@ using TMPro;
 // 09/28/2023
 // Manages scenes and quits the game
 
-public class EndScreen : MonoBehaviour
+public class SceneManagement : MonoBehaviour
 {
 
     public TMP_Text marshmallows;
