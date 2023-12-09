@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 //Liebert, Jasper
 //11/28/2023
@@ -323,6 +325,14 @@ public class PlayerControl : MonoBehaviour
             other.gameObject.SetActive(false);
         }
 
+        //if it hits the marshmallow princess, end the game
+        if (other.gameObject.tag == "Princess")
+        {
+            Debug.Log("doing the thing");
+            //switches to game over screen
+            SceneManager.LoadScene(2);
+        }
+
         //Sets new spawnpoint and teleports player
         if (other.gameObject.tag == "Portal")
         {
@@ -385,6 +395,7 @@ public class PlayerControl : MonoBehaviour
                 other.GetComponent<Spawner_Script>().CancelInvoke();
                 other.gameObject.SetActive(false);
             }
+
         }
 
         //small enemy

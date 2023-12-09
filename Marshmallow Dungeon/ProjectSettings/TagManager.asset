@@ -18,6 +18,7 @@ TagManager:
   - Armor
   - Lazer
   - Spawner
+  - Princess
   layers:
   - Default
   - TransparentFX
