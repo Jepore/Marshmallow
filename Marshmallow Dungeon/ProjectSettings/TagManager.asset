@@ -16,6 +16,7 @@ TagManager:
   - Shield Pickup
   - Shop
   - Armor
+  - Lazer
   layers:
   - Default
   - TransparentFX
