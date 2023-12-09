@@ -9,6 +9,8 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     public float temp = 0;
+    public float tempVel = 0;
+
     //Variables:
     public float coins = 0;
     public float hp = 50;
@@ -186,15 +188,17 @@ public class PlayerControl : MonoBehaviour
         //Adds velocity to both the player and the camera when moving
         if (Input.GetKey(KeyCode.W))
         {
-            rigidbodyRef.velocity = new Vector3(transform.forward.x * speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
+            tempVel += speed;
+            //rigidbodyRef.velocity = new Vector3(transform.forward.x * speed, rigidbodyRef.velocity.y, transform.forward.z* speed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            rigidbodyRef.velocity = new Vector3(-transform.forward.x * speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
+            tempVel -= speed;
+            //rigidbodyRef.velocity = new Vector3(-transform.forward.x * speed, rigidbodyRef.velocity.y, -transform.forward.z*speed);
         }
 
         //Rotating only the y of the player and the camera (since it is childed)
-        if (temp >= speedCap)
+        if (temp > speedCap)
         {
             temp = speedCap;
         }
@@ -206,15 +210,35 @@ public class PlayerControl : MonoBehaviour
         {
             temp = 0;
         }
+
         temp = temp / 1.44f;
+
         if (!isGrounded)
         {
             temp = temp / 1.44f;
         }
 
+        //Velocity
+        if (tempVel > 18)
+        {
+            tempVel = 18;
+        }
+        else if (temp < -18)
+        {
+            tempVel = -18;
+        }
+        else if (tempVel < 0.2f && tempVel > -0.2f)
+        {
+            tempVel = 0;
+        }
+
+        tempVel = tempVel / 1.44f;
+
+
         rotation += temp;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotation,transform.eulerAngles.z);
 
+        rigidbodyRef.velocity = new Vector3(transform.forward.x * tempVel, rigidbodyRef.velocity.y, transform.forward.z * tempVel);
 
     }
 
