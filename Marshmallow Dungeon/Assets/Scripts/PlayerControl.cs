@@ -261,10 +261,12 @@ public class PlayerControl : MonoBehaviour
     {
         if (transform.position.y <= -15)
         {
+            coins = 0;
             Respawn();
         }
         if (hp <= 0)
         {
+            coins = 0;
             Respawn();
         }
     }

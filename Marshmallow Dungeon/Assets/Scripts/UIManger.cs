@@ -21,10 +21,10 @@ public class UIManger : MonoBehaviour
     public TMP_Text pointsText;
     public TMP_Text hpText;
     public TMP_Text timer;
-    static public float time;
+    public static float time;
     public float itemTimer;
     public float itemTemp;
-    static public bool timing = false;
+    public static bool timing = true;
 
     // Start is called before the first frame update
     void Start()

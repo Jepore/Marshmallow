@@ -49,6 +49,7 @@ public class SceneManagement : MonoBehaviour
     public void StartGame()
     {
         SceneSwitch(1);
+        PlayerControl.coins = 0;
         UIManger.time = 0;
         UIManger.timing = true;
     }
