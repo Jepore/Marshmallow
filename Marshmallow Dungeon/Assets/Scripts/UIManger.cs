@@ -21,9 +21,10 @@ public class UIManger : MonoBehaviour
     public TMP_Text pointsText;
     public TMP_Text hpText;
     public TMP_Text timer;
-    public double time;
+    public static float time;
     public float itemTimer;
     public float itemTemp;
+    public static bool timing = true;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,10 @@ public class UIManger : MonoBehaviour
     {
         TextUpdate();
         ItemBarUpdate();
-        time += 1 * Time.deltaTime;
+        if (timing)
+        {
+            time += 1 * Time.deltaTime;
+        }
 
     }
 
@@ -45,7 +49,7 @@ public class UIManger : MonoBehaviour
     /// </summary>
     private void TextUpdate()
     {
-        pointsText.text = "Marshmallows: " + playerControl.coins;
+        pointsText.text = "Marshmallows: " + PlayerControl.coins;
         hpText.text = "Lives: " + playerControl.hp;
         timer.text = "" + ((float)((int)(time * 100))/100) ;
         //adjusts health bar width with player hp

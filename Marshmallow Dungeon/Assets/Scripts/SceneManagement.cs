@@ -11,14 +11,18 @@ using TMPro;
 public class SceneManagement : MonoBehaviour
 {
 
-    public TMP_Text marshmallows;
-    public PlayerControl playerControl;
-    public UIManger uiManager;
+    public TMP_Text timerText;
+    public TMP_Text marshText;
+    public TMP_Text score;
 
     //called once per frame
     void Start()
     {
-        marshmallows.text = "Score: " + playerControl.coins;
+        timerText.text = "  " + (int)(UIManger.time*100)/100 + " Seconds";
+        marshText.text = "  " + PlayerControl.coins + " Marshmallows";
+        score.text = "Score : " + ((int)(UIManger.time * 100) / 100 - PlayerControl.coins);
+
+
     }
 
     /// <summary>
@@ -39,10 +43,15 @@ public class SceneManagement : MonoBehaviour
         Application.Quit();
     }
 
+    /// <summary>
+    /// Switches to Game Scene and resets timer
+    /// </summary>
     public void StartGame()
     {
         SceneSwitch(1);
-        uiManager.time = 0;
+        PlayerControl.coins = 0;
+        UIManger.time = 0;
+        UIManger.timing = true;
     }
 
 }

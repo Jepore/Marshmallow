@@ -33,19 +33,19 @@ public class ShopControl : MonoBehaviour
         float itemCost = 0;
         bool buyable = false;
         //sword costs 3 coins
-        if (item == 1 && playerControl.coins >= 3)
+        if (item == 1 && PlayerControl.coins >= 3)
         {
             buyable = true;
             itemCost = 3;
         }
         //Gun costs 7 coins
-        if (item == 2 && playerControl.coins >= 7)
+        if (item == 2 && PlayerControl.coins >= 7)
         {
             buyable = true;
             itemCost = 7;
         }
         //Shield costs 15 coins
-        if (item == 3 && playerControl.coins >= 15)
+        if (item == 3 && PlayerControl.coins >= 15)
         {
             buyable = true;
             itemCost = 15;
@@ -53,7 +53,7 @@ public class ShopControl : MonoBehaviour
         if (buyable)
         {
             playerControl.item = item;
-            playerControl.coins -= itemCost;
+            PlayerControl.coins -= itemCost;
             playerControl.ItemManager();
         }
     }
