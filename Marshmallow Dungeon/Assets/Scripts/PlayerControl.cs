@@ -12,7 +12,7 @@ public class PlayerControl : MonoBehaviour
     public float tempVel = 0;
 
     //Variables:
-    public float coins = 0;
+    static public float coins = 0;
     public float hp = 50;
     public bool isGrounded = true;
     public float jumpForce = 10;
