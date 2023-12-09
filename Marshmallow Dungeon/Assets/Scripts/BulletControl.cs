@@ -10,7 +10,7 @@ using UnityEngine;
 public class BulletControl : MonoBehaviour
 {
     //Variables
-    public float bulletSpeed = 13;
+    public float bulletSpeed = 20;
     public Rigidbody bulletRigidbody;
 
     // Start is called before the first frame update
@@ -29,10 +29,35 @@ public class BulletControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Fan Enemy")
+        {
+            collision.gameObject.SetActive(false);
+        }
+
         //So the bullet doesn't collide with the player accidentally
         if (collision.gameObject.tag != "Player")
         {
             this.gameObject.SetActive(false);
         }
     }
+
+    /// <summary>
+    /// Manages collisions with the sword item
+    /// </summary>
+    /// <param name="other"> GameObject that was collided with </param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Small Enemy")
+        {
+            other.gameObject.SetActive(false);
+        }
+
+        if (other.tag == "Fan Enemy")
+        {
+            other.gameObject.SetActive(false);
+        }
+
+
+    }
+
 }

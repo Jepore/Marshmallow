@@ -11,11 +11,12 @@ public class CameraControl : MonoBehaviour
     //Variables
     public GameObject playerPos;
     public Vector3 offset;
+    
 
     void Start()
     {
         //only called here, when player dies, and when player teleports
-        Offset();
+        ResetCamera();
     }
 
     void Update()
@@ -27,14 +28,14 @@ public class CameraControl : MonoBehaviour
     /// Offset camera by a vector3, only to be used when rotation is 0,0,0
     /// </summary>
     /// <param name="offset"> the offset vector3 </param>
-    public void Offset()
+    public void ResetCamera()
     {
-        transform.rotation = Quaternion.identity;
+        transform.eulerAngles = new Vector3(playerPos.transform.eulerAngles.x + 15, playerPos.transform.eulerAngles.y, playerPos.transform.eulerAngles.z);
         transform.position = playerPos.transform.position + offset;
     }
 
 
-    //A BUNCH OF BULLSH
+    //A BUNCH OF BULL
     ///// <summary>
     ///// Add velocity to move the camera forwards with the player
     ///// </summary>
