@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
+    //Temp variables
     public float temp = 0;
     public float tempVel = 0;
 
@@ -49,6 +50,7 @@ public class PlayerControl : MonoBehaviour
 
     void Start()
     {
+        //initialize
         transform.GetChild(6).gameObject.SetActive(false);
         spawnPoint = transform.position;
         rigidbodyRef = GetComponent<Rigidbody>();
@@ -67,18 +69,8 @@ public class PlayerControl : MonoBehaviour
             HandleJump();
         }
 
-        //If player hits "C", swing sword and start a cooldown
-        if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 1)
-        {
-            StartCoroutine(Cooldown(1.5f));
-            StartCoroutine("Swing");
-        }
-        //If player hits "C", shoot gun
-        if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 2)
-        {
-            StartCoroutine(Cooldown(0.2f));
-            Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
-        }
+        //checks if attack button is pressed
+        Attacking();
 
         //checks if player is invulnerable
         Armored();
@@ -255,6 +247,22 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+
+    private void Attacking()
+    {
+        //If player hits "C", swing sword and start a cooldown
+        if (Input.GetKeyDown(KeyCode.F) && !cooling && item == 1)
+        {
+            StartCoroutine(Cooldown(1.5f));
+            StartCoroutine("Swing");
+        }
+        //If player hits "C", shoot gun
+        if (Input.GetKeyDown(KeyCode.F) && !cooling && item == 2)
+        {
+            StartCoroutine(Cooldown(0.2f));
+            Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
+        }
+    }
 
     /// <summary>
     /// Checks when player should die, and acts accordingly
