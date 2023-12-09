@@ -32,6 +32,11 @@ public class SwordControl : MonoBehaviour
         {
             other.gameObject.SetActive(false);
         }
+        if (other.tag == "Spawner")
+        {
+            other.GetComponent<Spawner_Script>().CancelInvoke();
+            other.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>

@@ -34,6 +34,7 @@ public class BulletControl : MonoBehaviour
             collision.gameObject.SetActive(false);
         }
 
+
         //So the bullet doesn't collide with the player accidentally
         if (collision.gameObject.tag != "Player")
         {
@@ -52,8 +53,9 @@ public class BulletControl : MonoBehaviour
             other.gameObject.SetActive(false);
         }
 
-        if (other.tag == "Fan Enemy")
+        if (other.tag == "Spawner")
         {
+            other.GetComponent<Spawner_Script>().CancelInvoke();
             other.gameObject.SetActive(false);
         }
 
