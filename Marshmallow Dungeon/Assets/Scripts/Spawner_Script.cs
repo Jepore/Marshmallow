@@ -17,6 +17,7 @@ public class Spawner_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        new WaitForSeconds(startDelay);
         InvokeRepeating("SpawnProjectile", startDelay, timeBetweenShots);
     }
 
@@ -24,10 +25,8 @@ public class Spawner_Script : MonoBehaviour
     public void SpawnProjectile()
     {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
-        if (projectile.GetComponent<Lazer_Script>())
-        {
-            projectile.GetComponent<Lazer_Script>().goingLeft = goingLeft;
-        }
+        projectile.GetComponent<Lazer_Script>().goingLeft = goingLeft;
+
     }
-    
+
 }

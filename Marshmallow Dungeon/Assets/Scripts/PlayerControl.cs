@@ -74,7 +74,7 @@ public class PlayerControl : MonoBehaviour
         //If player hits "C", shoot gun
         if (Input.GetKeyDown(KeyCode.C) && !cooling && item == 2)
         {
-            StartCoroutine(Cooldown(0.3f));
+            StartCoroutine(Cooldown(0.2f));
             Instantiate(bullet, transform.GetChild(2).transform.position, Quaternion.Euler(90, rotation, 0));
         }
 
@@ -369,10 +369,32 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
+        if (other.gameObject.tag == "Spawner")
+        {
+            if (!dangerous)
+            {
+                if (!invulnerable)
+                {
+                    Damaged(10);
+                }
+            }
+            else
+            {
+                other.GetComponent<Spawner_Script>().CancelInvoke();
+                other.gameObject.SetActive(false);
+            }
+        }
+
         //small enemy
         if (other.gameObject.tag == "Spikes" && !invulnerable)
         {
             Damaged(10);
+        }
+
+        //Lazer
+        if (other.gameObject.tag == "Lazer" && !invulnerable)
+        {
+            Damaged(15);
         }
 
         //Shopping zone
@@ -386,7 +408,7 @@ public class PlayerControl : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.tag == "Fan Enemy" && !invulnerable)
+        if (collision.gameObject.tag == "Fan Enemy")
         {
             if (!dangerous)
             {
