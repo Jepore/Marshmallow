@@ -13,6 +13,7 @@ public class BackAndForth : MonoBehaviour
     private Vector3 rightPos;
     public int speed;
     public bool goingLeft;
+    public bool xAxis;
 
 
     // Start is called before the first frame update
@@ -31,29 +32,56 @@ public class BackAndForth : MonoBehaviour
     //this will make the enemy move left or right 
     private void Move()
     {
-        if (goingLeft)
+        if (xAxis)
         {
-            if(transform.position.x <= leftPos.x)
+            if (goingLeft)
             {
-                goingLeft = false;
+                if (transform.position.x <= leftPos.x)
+                {
+                    goingLeft = false;
+                }
+                else
+                {
+                    transform.position += Vector3.left * Time.deltaTime * speed;
+                }
             }
             else
             {
-                transform.position += Vector3.left * Time.deltaTime * speed;
+                if (transform.position.x >= rightPos.x)
+                {
+                    goingLeft = true;
+                }
+                else
+                {
+                    transform.position += Vector3.right * Time.deltaTime * speed;
+                }
             }
         }
         else
         {
-            if(transform.position.x >= rightPos.x)
+            if (goingLeft)
             {
-                goingLeft = true;
+                if (transform.position.z <= leftPos.z)
+                {
+                    goingLeft = false;
+                }
+                else
+                {
+                    transform.position += Vector3.back * Time.deltaTime * speed;
+                }
             }
             else
             {
-                transform.position += Vector3.right * Time.deltaTime * speed;
+                if (transform.position.z >= rightPos.z)
+                {
+                    goingLeft = true;
+                }
+                else
+                {
+                    transform.position += Vector3.forward * Time.deltaTime * speed;
+                }
             }
         }
     }
-
 
 }

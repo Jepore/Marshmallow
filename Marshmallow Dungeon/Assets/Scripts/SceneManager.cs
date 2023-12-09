@@ -1,18 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
-public class SceneManager : MonoBehaviour
+// Liebert, Jasper
+// 09/28/2023
+// Manages scenes and quits the game
+
+public class EndScreen : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public TMP_Text marshmallows;
+    public PlayerControl playerControl;
+    public UIManger uiManager;
+
+    //called once per frame
     void Start()
     {
-        
+        marshmallows.text = "Score: " + playerControl.coins;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// switches scene based off of build index
+    /// </summary>
+    /// <param name="buildIndex"> index assigned to the scenes </param>
+    public void SceneSwitch(int buildIndex)
     {
-        
+        SceneManager.LoadScene(buildIndex);
     }
+
+    /// <summary>
+    /// quits the game
+    /// </summary>
+    public void QuitGame()
+    {
+        Debug.Log("Game Quit");
+        Application.Quit();
+    }
+
+    public void StartGame()
+    {
+        SceneSwitch(1);
+        uiManager.time = 0;
+    }
+
 }

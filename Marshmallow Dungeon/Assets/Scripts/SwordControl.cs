@@ -43,7 +43,6 @@ public class SwordControl : MonoBehaviour
         Debug.Log(collision);
         if (collision.gameObject.tag == "Fan Enemy")
         {
-            Debug.Log("WAH");
             collision.gameObject.SetActive(false);
         }
     }
